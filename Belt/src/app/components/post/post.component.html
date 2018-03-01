@@ -1,0 +1,21 @@
+<div class="container">
+    <div *ngFor="let info of posts">
+      <div *ngIf="info._id === post_Id">
+        <a routerLink="['/dashboard']">Home</a>
+        |
+        <a [routerLink]="['/answer', post._id]">Answer</a>
+        |
+        <a href="/logout">Logout</a>
+
+        <h1>{{ info.title }}</h1>
+        <h3>{{ info.description }}</h3>
+        <hr>
+        <h2>Answers:</h2>
+        <div *ngFor="let answer of info.answers">
+          <h2>{{ answer._user.name }}</h2>
+          <h3>{{ answer.answer }}</h3>
+          <h5>{{ answer.answer }}</h5>
+          <p>{{ answer.likes }}</p>
+          <button (click)="like(answer._id)">Like</button>
+        </div>
+      </div>
