@@ -14,7 +14,8 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 
 import { DataService } from './services/data.service';
 import { ComponentsComponent } from './components/components.component';
-
+import { SortByPipe } from './sort.pipe';
+import { SearchPipe } from './search.pipe';
 
 @NgModule({
   declarations: [
@@ -24,13 +25,16 @@ import { ComponentsComponent } from './components/components.component';
     AnswerComponent,
     LoginComponent,
     DashboardComponent,
-    ComponentsComponent
+    ComponentsComponent,
+    SearchPipe,
+    SortByPipe
   ],
   imports: [
     BrowserModule,
     FormsModule,
     HttpModule,
     AppRoutingModule
+
   ],
   providers: [DataService],
   bootstrap: [AppComponent]

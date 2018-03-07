@@ -1,19 +1,19 @@
-<a [routerLink]="['/post', post_id]">Go back to Post</a>
+<a [routerLink]="['/view-question', question._id]">Go back to Question</a>
 |
-<a href="/logout">Logout</a>
+<a (click)="logout()">Logout</a>
 
-<div *ngFor='let info of post'>
-  <h2>{{ info.title }}</h2>
-  <p>{{ info.description }}</p>
+<div id='content'>
+  <form (submit)="createAnswer()" #answerForm='ngForm'>
+    <label for="">Answer: </label>
+    <br>
+    <textarea cols="30" rows="10" name="answer" required minlength="5" [(ngModel)]="newAnswer.answer"></textarea>
+    <p [ngStyle]="{'color': 'red'}" *ngFor='let error of errors'>{{ error }}</p>
+    <br>
+    <label for="details">Details(optional)</label>
+    <br>
+    <textarea name="details" cols="30" rows="10" [(ngModel)]="newAnswer.details"></textarea>
+    <br>
+    <button type="submit" [disabled]="answerForm.invalid">Submit Answer</button>
+    <button [routerLink]="['/dashboard']">Cancel</button>
+  </form>
 </div>
-<form (submit)="createAnswer(formData)" #formData="ngForm">
-  <div *ngIf="name.invalid && (name.dirty || name.touched)">
-      Answer requires at least 5 characters
-  </div>
-  <label for="answer">Answer:</label>
-  <textarea type="text" name="answer" required minlength="5" [(ngModel)]="answer.title" #name='ngModel'></textarea>
-  <label for="description">Details (optional):</label>
-  <textarea type="text" name="description" [(ngModel)]="answer.description" #description='ngModel'></textarea>
-  <button type="submit" [disabled]="formData.invalid">Submit</button>
-  <button (click)="clear(formData)">Cancel</button>
-</form>

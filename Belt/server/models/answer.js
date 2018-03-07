@@ -2,12 +2,12 @@ const mongoose = require('mongoose');
 
 const { Schema } = mongoose;
 const answerSchema = new Schema({
-  content: {
+  answer: {
     type: String,
     required: [true, 'Content is required'],
     minlength: 5
   },
-  description: {
+  details: {
     type: String,
     maxlength: 200
   },
@@ -15,16 +15,16 @@ const answerSchema = new Schema({
     type: Number,
     default: 0
   },
-  postId: {
-    type: String
-  },
-  _post: {
+  question: {
     type: Schema.Types.ObjectId,
     ref: 'Post'
+  },
+  user: {
+    type: Schema.Types.ObjectId,
+    ref: 'User'
   }
 }, {
-    timestamps: true,
-    usePushEach: true
+    timestamps: true
 });
 
 module.exports = mongoose.model('Answer', answerSchema);

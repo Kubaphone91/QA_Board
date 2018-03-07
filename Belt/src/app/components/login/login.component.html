@@ -2,13 +2,13 @@
   <div class="login">
     <h1>Login</h1>
   </div>
-  <form (submit)='onSubmit(formData.value)' #formData="ngForm">
+  <form (submit)='createUser()'>
     <label for="">Name: </label>
-    <input type="text" name="name" required minlength="3" #name="ngModel" [(ngModel)]="user.name" class="form-control">
-    <div *ngIf="name.invalid && (name.dirty || name.touched)">
-      Minimum 3 characters
+    <input type="text" name="name" required minlength="3" [(ngModel)]="newUser.name" class="form-control">
+    <div *ngFor='let error of errors'>
+      <p [ngStyle]="{ 'color': 'red' }">{{ error }}</p>
     </div>
     <br>
-    <button class="btn btn-success" type="submit" [disabled]="formData.invalid">Login</button>
+    <button class="btn btn-success" type="submit">Login</button>
   </form>
 </div>

@@ -6,6 +6,14 @@ const userSchema = new Schema({
     type: String,
     required: true,
     minlength: 3
+  },
+  questions: {
+    type: Schema.Types.ObjectId,
+    ref: 'Post'
+  },
+  answers: {
+    type: Schema.Types.ObjectId,
+    ref: 'Answer'
   }
 },{
   timestamps: true

@@ -1,14 +1,16 @@
-<a routerLink="['/dashboard']">Home</a> | <a href="/logout">Logout</a>
+<a [routerLink]="['/dashboard']">Home</a> | <a (click)="logout()">Logout</a>
 
 <h2>New Question</h2>
-<form (submit)="createPost(formData)" #formData="ngForm">
-  <div *ngIf="name.invalid && (name.dirty || name.touched)">
-    Question requires at least 10 characters
-  </div>
-  <label for="post">Question</label>
-  <textarea type="text" name="post" required minlength="10" [(ngModel)]="post.title" #name='ngModel'></textarea>
-  <label for="description">Description (optional)</label>
-  <textarea type="text" name="description" [(ngModel)]="post.description" #description='ngModel'></textarea>
-  <button type="submit" [disabled]="formData.invalid">Submit</button>
-  <button (click)="clear(formData)">Cancel</button>
+<form (submit)="createQuestion()" #questionForm='ngForm' class="">
+  <label for="">Question:</label>
+  <br>
+  <textarea cols="30" rows="10" name="question" required minlength="10" [(ngModel)]="newQuestion.question"></textarea>
+  <p [ngStyle]="{'color' : 'red'}" *ngFor='let error of errors'>{{ error }}</p>
+  <br>
+  <label for="">Description(optional):</label>
+  <br>
+  <textarea name="description" cols="30" rows="10" [(ngModel)]="newQuestion.description"></textarea>
+  <br>
+  <button type="submit" [disabled]='questionForm.invalid'>Submit</button>
+  <button [routerLink]="['/dashboard']">Cancel</button>
 </form>

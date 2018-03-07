@@ -1,21 +1,27 @@
 const mongoose = require('mongoose');
-const session = require('express-session');
+//const session = require('express-session');
+const User = require('../models/user');
 
 module.exports = {
+
   login: (req, res) => {
-    req.session.user = req.body.name;
-    return res.json(req.session.user);
-  },
-  logout: (req, res) => {
-    req.session.destroy();
-    res.redirect('/');
-  },
-  currentUser: (req, res) => {
-    if(!req.session.user){
-      return res.status(401).send("Not logged in/user must be created")
-    }
-    else{
-      return res.json(req.session.user);
-    }
+    User.findOne({ name: req.body.name }, (err, user) => {
+      if(err){
+        return res.json(err);
+      }
+      else if(!user){
+        User.create(req.body, (err, user) => {
+          if(err){
+            return res.json(err);
+          }
+          else{
+            return res.json(user);
+          }
+        })
+      }
+      else{
+        return res.json(user);
+      }
+    })
   }
 }

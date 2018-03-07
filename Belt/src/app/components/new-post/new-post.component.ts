@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { NgForm } from '@angular/forms';
+//import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { DataService } from '../../services/data.service';
-import { Post } from '../../models/post';
+//import { Post } from '../../models/post';
 
 
 @Component({
@@ -11,25 +11,40 @@ import { Post } from '../../models/post';
   styleUrls: ['./new-post.component.css']
 })
 export class NewPostComponent implements OnInit {
-  post: Post;
+  currentUser = { _id: ''};
+  newQuestion = { user: ''};
+  errors = [];
 
   constructor(private _dataService: DataService, private _router: Router) { }
 
   ngOnInit() {
+    this.currentUser = this._dataService.getCurrentUser();
   }
 
-  createPost(form: NgForm){
-    this._dataService.addPost(this.post,
-      (post) => {
+  createQuestion(){
+    this.errors = [];
+    this.newQuestion.user = this.currentUser._id;
+    return this._dataService.addPost(this.newQuestion)
+      .then(question => {
+        if(question.errors){
+          for(let key in question.errors){
+            this.errors.push(question.errors[key].message);
+          }
+          console.log(this.errors);
+        }
         this._router.navigateByUrl('/dashboard');
-      },
-    (err) => {
-      console.log('Something went wrong');
-    })
-
+      })
+      .catch(err => console.log(err));
   }
 
-  clear(formData){
-    formData.reset();
+  logout(){
+    this._dataService.logout();
+    this._router.navigateByUrl('/login');
+  }
+
+  isLoggedIn(){
+    if(this._dataService.getCurrentUser() == null){
+      this._router.navigateByUrl('/login');
+    }
   }
 }

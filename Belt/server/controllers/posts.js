@@ -1,81 +1,57 @@
 const mongoose = require('mongoose');
-const Answer = require('../models/answer');
+//const session = require('express-session');
+//const Answer = require('../models/answer');
 const Post = require('../models/post');
+const User = require('../models/user');
 
 module.exports = {
   addPost: (req, res) => {
-    if(!req.session.user){
-      return res.sendStatus(401);
-    }
-    else{
-      Post.create({ title: req.body.title, content: req.body.content, description: req.body.description}, (err, post) => {
-        Post.find({}).sort("-likes")
-          .exec((err, posts) => {
-            return res.json(posts);
-          })
-      })
-    }
-  },
-  addAnswer: (req, res) => {
-    if(!req.session.user){
-      return res.sendStatus(401);
-    }
-    Post.findOne({ _id: req.body.postId }, (err, post) => {
+    console.log(req.body);
+    Post.create(req.body, (err, question) => {
       if(err){
-        console.log(err);
-        return res.sendStatus(500);
+        return res.json(err);
       }
-      else{
-        Answer.create({ content: req.body.content, description: req.body.description, _post: req.body.postId}, (err, answer) => {
-          question.answers.push(answer._id);
-          question.save((err, post) => {
-            res.json();
-          })
-        })
-      }
+      User.findOneAndUpdate(req.body.user, {$push : { questions: question._id}}, { new: true}, (err, user) =>{
+        if(err){
+          return res.json(err);
+        }
+        return res.json(question);
+      })
     })
   },
   showAll: (req, res) => {
-    Post.find({}).populate('answers')
-      .exec((err, posts) => {
+    Post.find({})
+      .populate('user answers')
+      .exec((err, questions) => {
         if(err){
-          console.log(err);
+          return res.json(err);
         }
-        else{
-          res.json(posts);
-        }
+        return res.json(questions);
       })
   },
-  grabPost(req, res){
-    Post.find({ _id: req.body.id}).populate('_user').populate({path: 'answers', populate: {path: '_user'}})
-      .exec((err, grabbedPost) => {
-        if(err){
-          res.json(err);
-          return res.sendStatus(500);
-        }
-        else{
-          res.json(grabbedPost);
+  grabPost: (req, res) => {
+    Post.findById(req.params.id)
+      .populate({
+        path: 'user',
+        model: 'User',
+        populate: {
+          path: 'answers',
+          model: 'Answer'
         }
       })
-  },
-  like(req, res){
-    Answer.findOne({ _id: req.params.id}, (err, answer) => {
-      if(err){
-        console.log(err);
-        return;
-      }
-      else{
-        answer.likes += 1;
-        answer.save((err, likesAdded) => {
-          if(err){
-            console.log(err);
-            return;
-          }
-          else{
-            return res.json(likesAdded);
-          }
-        })
-      }
-    })
+      .populate({
+        path: 'answers',
+        model: 'Answer',
+        populate: {
+          path: 'user',
+          model: 'User'
+        }
+      })
+      .exec((err, question) => {
+        if(err){
+          return res.json(err);
+        }
+        return res.json(question);
+      })
   }
 }

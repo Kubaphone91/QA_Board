@@ -1,21 +1,20 @@
+<a [routerLink]="['/dashboard']">Home</a>
+|
+<a [routerLink]="['/question', param_id, 'new_answer']">Answer</a>
+|
+<a (click)="logout()">Logout</a>
 <div class="container">
-    <div *ngFor="let info of posts">
-      <div *ngIf="info._id === post_Id">
-        <a routerLink="['/dashboard']">Home</a>
-        |
-        <a [routerLink]="['/answer', post._id]">Answer</a>
-        |
-        <a href="/logout">Logout</a>
+    <div>
+        <h1>Question: {{ question?.question }}</h1>
+        <h3>Description: {{ question?.description }}</h3>
 
-        <h1>{{ info.title }}</h1>
-        <h3>{{ info.description }}</h3>
         <hr>
-        <h2>Answers:</h2>
-        <div *ngFor="let answer of info.answers">
-          <h2>{{ answer._user.name }}</h2>
-          <h3>{{ answer.answer }}</h3>
-          <h5>{{ answer.answer }}</h5>
-          <p>{{ answer.likes }}</p>
-          <button (click)="like(answer._id)">Like</button>
+        <div *ngFor="let answer of question.answers | sortBy: 'likes'; let idx = index">
+          <h3>{{ answer?.user.name }}</h3>
+          <h4>{{ answer?.answer }}</h4>
+          <p>{{ answer?.details }}</p>
+          <p> Likes: {{ answer?.likes }} </p>
+          <button (click)="increaseLikes(answer._id, idx)">Like!</button>
         </div>
-      </div>
+    </div>
+</div>

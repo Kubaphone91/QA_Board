@@ -11,9 +11,9 @@ const routes: Routes = [
   { path: "", redirectTo: '/login', pathMatch: 'full'},
   { path: "login", component: LoginComponent },
   { path: "dashboard", component: DashboardComponent },
-  { path: "newpost", component: NewPostComponent },
-  { path: "post/:id", component: PostComponent },
-  { path: "answer/:id", pathMatch: "full", component: AnswerComponent }
+  { path: "new-question", component: NewPostComponent },
+  { path: "view-question/:id", component: PostComponent },
+  { path: "question/:id/new_answer", component: AnswerComponent }
 ];
 
 @NgModule({
